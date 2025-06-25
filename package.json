@@ -1,0 +1,23 @@
+{
+  "dependencies": {
+    "express": "^5.1.0"
+  },
+  "name": "finalproject_jmadden",
+  "version": "1.0.0",
+  "description": "Final project",
+  "main": "main.js",
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Maddenjk/FinalProject_Jmadden.git"
+  },
+  "author": "Jacqueline Madden",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Maddenjk/FinalProject_Jmadden/issues"
+  },
+  "homepage": "https://github.com/Maddenjk/FinalProject_Jmadden#readme"
+}

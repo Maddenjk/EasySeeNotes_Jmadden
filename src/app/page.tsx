@@ -1,6 +1,6 @@
 'use client'
 import Image from "next/image";
-import styles from "./main.css";
+import styles from "./main.module.css";
 import { useEffect, useRef, useState } from "react";
 
 export default function Home(this: any) {
@@ -58,7 +58,7 @@ export default function Home(this: any) {
               textData.forEach((item: string[]) => {
                 item.forEach(element => {
                   let key = "TextLine" + counter
-                  textArray.push(<p key={key}>{element}</p>)
+                  textArray.push(<p className="easysee" key={key}>{element}</p>)
                   counter += 1  
                 });
               });
@@ -88,7 +88,7 @@ export default function Home(this: any) {
       else{
         data.forEach((item: string) => {
           let key = "TextLine" + counter
-          textArray.push(<p key={key}>{item}</p>)
+          textArray.push(<p className="easysee" key={key}>{item}</p>)
           counter += 1
         });
         setText(textArray)
@@ -129,12 +129,12 @@ function FilenamesListComponent() {
     getFileNames()
 
   },[]);
-      return(<select id="fileList" onChange={handleChange}>
-          <option key="" value="">
+      return(<select id="fileList" className="easysee" onChange={handleChange}>
+          <option className="easysee" key="" value="">
           </option>
           {
           fileNames.map((option) => (
-          <option key={option.value} value={option.value}>
+          <option className="easysee" key={option.value} value={option.value}>
             {option.label}
           </option>
         ))}
@@ -144,9 +144,9 @@ function FilenamesListComponent() {
   return (
     <div className={styles.page}>
       <main className={styles.main}>
-        <input type="file" name="selectFile" id="selectFile" ref={inputFile} onChange={selectNewFile} accept=".pdf"></input>
-        <button id="savefile" name="savefile" title="Save Text" onClick={saveFile}>Save Text</button>
-        <label hidden={true} id="saveLabel" ref={saveLabel} >Text File Saved</label>
+        <input className="easysee" type="file" name="selectFile" id="selectFile" ref={inputFile} onChange={selectNewFile} accept=".pdf"></input>
+        <button className="easysee" id="savefile" name="savefile" title="Save Text" onClick={saveFile}>Save Text</button>
+        <label className="easysee" hidden={true} id="saveLabel" ref={saveLabel} >Text File Saved</label>
         <br />
         {FilenamesListComponent()}
         <br />

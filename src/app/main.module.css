@@ -5,22 +5,7 @@
       font-style: normal;
     }
 
-p{
-    font-size: 18px;
-    font-family:"Atkinson"
-}
-
-button{
-    font-size: 18px;
-    font-family:"Atkinson"
-}
-
-input{
-    font-size: 18px;
-    font-family:"Atkinson"
-}
-
-select{
+.easysee{
     font-size: 18px;
     font-family:"Atkinson"
 }

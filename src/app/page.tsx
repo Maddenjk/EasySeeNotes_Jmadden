@@ -152,7 +152,7 @@ function FilenamesListComponent() {
         <label className="easysee" id="saved files">Saved Files:</label>
         {FilenamesListComponent()}
         <br />
-        <label className="easysee" id="texttospeech">Text to Speech Options</label>
+        <label className="easysee" id="texttospeech">Text to Speech:</label>
         <button className="easysee" disabled={speechStatus === "started"} onClick={start}>Start</button>
         <button className="easysee" disabled={speechStatus === "paused"} onClick={pause}>Pause</button>
         <button className="easysee" disabled={speechStatus === "stopped"} onClick={stop}>Stop</button>

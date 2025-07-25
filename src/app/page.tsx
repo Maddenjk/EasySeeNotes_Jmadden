@@ -1,5 +1,4 @@
 'use client'
-import styles from "./page.module.css";
 import { useEffect, useRef, useState } from "react";
 import { useSpeech } from "react-text-to-speech";
 export default function Home(this: any) {
@@ -109,10 +108,9 @@ function FilenamesListComponent() {
     const fileList:{ value: string; label: string; }[] = [];
 
     fetch('http://localhost:5000/get-filenames',)
-    .then(response => response.json()) // Parse the response as plain text
+    .then(response => response.json())
     .then(data => {
       console.log("Received text from server:", data);
-      // Display the text on your webpage
       data.forEach((element: string) => {
         const newOption =  { value: element, label: element }
         fileList.push(newOption);

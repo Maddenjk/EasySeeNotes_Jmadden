@@ -1,12 +1,12 @@
 'use client'
 import { useEffect, useRef, useState } from "react";
 
-import { useSpeech } from "react-text-to-speech";
+// import { useSpeech } from "react-text-to-speech";
 export default function Home(this: any) {
 
   const [text, setText] = useState(<></>)
   const [fileNames, setFileNames] = useState<{ value: string; label: string; }[]>([]);
-  const { Text, speechStatus, start, pause, stop } = useSpeech({text: text, highlightText: true, highlightMode: "word"} )  
+  // const { Text, speechStatus, start, pause, stop } = useSpeech({text: text, highlightText: true, highlightMode: "word"} )  
   const inputFile = useRef<any>(null);
   const saveLabel = useRef<any>(null);
 
@@ -100,12 +100,12 @@ export default function Home(this: any) {
   }
 
 function DocumentTextComponent(){
-if (typeof window !== 'undefined' && typeof navigator !== 'undefined') {
-  return(<Text/>)
-}
-else{
+// if (typeof window !== 'undefined' && typeof navigator !== 'undefined') {
+//   return(<Text/>)
+// }
+// else{
   return(<>{text}</>)
-}
+// }
 }
 
 function FilenamesListComponent() {
@@ -156,10 +156,10 @@ function FilenamesListComponent() {
         <label className="easysee" id="saved files">Saved Files:</label>
         {FilenamesListComponent()}
         <br />
-        <label className="easysee" id="texttospeech">Text to Speech:</label>
+        {/* <label className="easysee" id="texttospeech">Text to Speech:</label>
         <button className="easysee" disabled={speechStatus === "started"} onClick={start}>Start</button>
         <button className="easysee" disabled={speechStatus === "paused"} onClick={pause}>Pause</button>
-        <button className="easysee" disabled={speechStatus === "stopped"} onClick={stop}>Stop</button>
+        <button className="easysee" disabled={speechStatus === "stopped"} onClick={stop}>Stop</button> */}
         {DocumentTextComponent()}
       </main>
     </div>

@@ -122,6 +122,7 @@ app.post('/get-saved-text', (req, res) => {
 
 app.get('/save-file', (req, res) => {
     sendFile()
+    console.log("File Saved")
     res.send(filename)
 })
 

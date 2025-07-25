@@ -1,13 +1,12 @@
 'use client'
-import Image from "next/image";
-import styles from "./main.module.css";
+import styles from "./page.module.css";
 import { useEffect, useRef, useState } from "react";
-
+import { useSpeech } from "react-text-to-speech";
 export default function Home(this: any) {
 
   const [text, setText] = useState(<></>)
   const [fileNames, setFileNames] = useState<{ value: string; label: string; }[]>([]);
-  
+  const { Text, speechStatus, start, pause, stop } = useSpeech({text: text, highlightText: true, highlightMode: "word"} )  
   const inputFile = useRef<any>(null);
   const saveLabel = useRef<any>(null);
 
@@ -16,13 +15,15 @@ export default function Home(this: any) {
       if(inputFile.current.value != ""){
             await fetch('http://localhost:5000/save-file',{
               method:"GET"
-            }).then((result)=>{
-              const filename = result.toString()
-              saveLabel.current.hidden = false
-              const newOption =  { value: filename, label: filename }
-              const tempfiles = fileNames
-              tempfiles.push(newOption)
-              setFileNames(tempfiles);
+            }).then(async(response)=>{
+                await response.text().then((filename)=>{
+                  console.log(filename)
+                  saveLabel.current.hidden = false
+                  const newOption =  { value: filename, label: filename }
+                  const tempfiles = [...fileNames]
+                  tempfiles.push(newOption)
+                  setFileNames(tempfiles);
+                })
             })
         }
       }
@@ -99,7 +100,7 @@ export default function Home(this: any) {
   }
 
 function DocumentTextComponent(){
-  return(<>{text}</>)
+  return(<Text/>)
 }
 
 function FilenamesListComponent() {
@@ -142,14 +143,19 @@ function FilenamesListComponent() {
 }
 
   return (
-    <div className={styles.page}>
-      <main className={styles.main}>
+    <div>
+      <main>
         <input className="easysee" type="file" name="selectFile" id="selectFile" ref={inputFile} onChange={selectNewFile} accept=".pdf"></input>
         <button className="easysee" id="savefile" name="savefile" title="Save Text" onClick={saveFile}>Save Text</button>
         <label className="easysee" hidden={true} id="saveLabel" ref={saveLabel} >Text File Saved</label>
         <br />
+        <label className="easysee" id="saved files">Saved Files:</label>
         {FilenamesListComponent()}
         <br />
+        <label className="easysee" id="texttospeech">Text to Speech Options</label>
+        <button className="easysee" disabled={speechStatus === "started"} onClick={start}>Start</button>
+        <button className="easysee" disabled={speechStatus === "paused"} onClick={pause}>Pause</button>
+        <button className="easysee" disabled={speechStatus === "stopped"} onClick={stop}>Stop</button>
         {DocumentTextComponent()}
       </main>
     </div>

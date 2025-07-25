@@ -1,5 +1,6 @@
 'use client'
 import { useEffect, useRef, useState } from "react";
+
 import { useSpeech } from "react-text-to-speech";
 export default function Home(this: any) {
 
@@ -99,7 +100,12 @@ export default function Home(this: any) {
   }
 
 function DocumentTextComponent(){
+if (typeof window !== 'undefined' && typeof navigator !== 'undefined') {
   return(<Text/>)
+}
+else{
+  return(<>{text}</>)
+}
 }
 
 function FilenamesListComponent() {
@@ -107,7 +113,7 @@ function FilenamesListComponent() {
   async function getFileNames(){
     const fileList:{ value: string; label: string; }[] = [];
 
-    fetch('http://localhost:5000/get-filenames',)
+    fetch('http://localhost:5000/get-filenames')
     .then(response => response.json())
     .then(data => {
       console.log("Received text from server:", data);

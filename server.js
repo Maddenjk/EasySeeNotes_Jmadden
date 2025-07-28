@@ -73,7 +73,6 @@ const readPDF = async (file) =>{
     const pdf = await PDFDocument.load(file);
     // Get the number of pages
     const numberOfPages = pdf.getPages().length;
-    data = "";
     // DetectDocumentTextCommand can only handle one page at a time
     for (let i = 0; i < numberOfPages; i++) {
       // New pdf to temporarily save the page

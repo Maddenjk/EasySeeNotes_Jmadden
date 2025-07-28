@@ -7,22 +7,25 @@ const app = express();
 const port = 5000;
 app.use(cors());
 app.use(express.json({limit: '50mb'}));
+// Set it up so we can pass the pdf to the server
 app.use(express.raw({ type: 'application/octet-stream', limit: '50mb' }));
 app.listen(port, () => {
     console.log(`server running on port ${port}`);
-    console.log(`access at http://localhost:${port}`)
 });
 
 const { S3Client, GetObjectCommand, PutObjectCommand, ListObjectsV2Command } = require("@aws-sdk/client-s3");
 
 const s3Client = new S3Client();
 
+// The bucket where the files go
 const bucketName = "easyseenotes";
 
+// We need to keep the data and file name saved back here for
+// saving the file 
 let data = ""
-
 let filename = ""
 
+// Send the file to s3
 const sendFile =async () =>{
   await s3Client.send(
     new PutObjectCommand({
@@ -33,22 +36,25 @@ const sendFile =async () =>{
   );
 }
 
+// Get the file from s3
 const getFile = async (objectKey) =>{
     const data = await s3Client.send(new GetObjectCommand({ Bucket: bucketName, Key: objectKey }));
     result = await data.Body.transformToString();
+    // Split up the text into an array
     result = result.split("\n")
-    console.log(result)
     return result;
 }
 
+// Get the list of saved files from S3
 async function listS3FileNames() {
   try {
     const command = new ListObjectsV2Command({ Bucket: bucketName });
     const response = await s3Client.send(command);
 
+    // If we got the files
     if (response.Contents) {
+      // Map out their keys (which are the names)
       const fileNames = response.Contents.map(file => file.Key);
-      console.log(fileNames)
       return fileNames;
     } else {
       return [];
@@ -59,18 +65,28 @@ async function listS3FileNames() {
   }
 }
 
+// Read the PDF into text
 const readPDF = async (file) =>{
   result = []
   try{
+    // Load pdf into PDFDocument
     const pdf = await PDFDocument.load(file);
+    // Get the number of pages
     const numberOfPages = pdf.getPages().length;
     data = "";
+    // DetectDocumentTextCommand can only handle one page at a time
     for (let i = 0; i < numberOfPages; i++) {
+      // New pdf to temporarily save the page
       const newPdf = await PDFDocument.create();
+      // Copy just this one page
       const [copiedPage] = await newPdf.copyPages(pdf, [i]);
+      // Add it to the temp pdf
       newPdf.addPage(copiedPage);
+      // Get the bytes
       const pdfBytes = await newPdf.save();
+      // Read the page text
       result.push(await readPage(pdfBytes));
+      // Use this to set a line between pages
       result.push([[]]);
     }
   }
@@ -81,29 +97,34 @@ const readPDF = async (file) =>{
 }
 
 
+// Read the page text
 const readPage = async (fileImage) =>{
   try {
     const client = new TextractClient();
-    const input = { // DetectDocumentTextRequest
-      Document: { // Document
+    const input = { 
+      Document: { 
         Bytes: fileImage
       },
     };
     const command = new DetectDocumentTextCommand(input);
     const response = await client.send(command);
+
+    // Fiter out only line elements from the blocks
     const filteredObjects = response.Blocks.filter(obj => {
-      const values = Object.values(obj);   
+      // This turns the block into an array
+      const values = Object.values(obj);  
+      // Go through the values and return the LINE element 
       return values.some(value => {
+        // If the value is an array
         if (Array.isArray(value)) {
           return value.includes("LINE");
         }
+        // If the value is a string
         return typeof value === 'string' && value.includes("LINE");
   }); 
     });
+    // Split the inner filtered objects text lines into an array
     const text = filteredObjects.map(obj => obj.Text.split('\n'));
-    data = data.concat(text.join('\n')) 
-    data = data.concat('\n') 
-    console.log(text)
 
     return text
   } catch (error) {
@@ -112,36 +133,40 @@ const readPage = async (fileImage) =>{
   }
 }
 
+// Get the text from a saved file
 app.post('/get-saved-text', (req, res) => {
   getFile(req.body.filename).then(textData => {
-      // Send the resolved text as a plain text response
       res.send(textData); 
     }
   )
 });
 
+// Save a file to S3
 app.get('/save-file', (req, res) => {
     sendFile()
     console.log("File Saved")
     res.send(filename)
 })
 
+// Get the file names from s3
 app.get('/get-filenames', (req, res) => {
   listS3FileNames().then(textData => {
-    // Send the resolved text as a plain text response
     res.json(textData); 
-  })});
+  })
+});
 
-   
+
+// convert the pdf to text so it can be displayed
 app.post('/convert-pdf-to-text',(req, res)=>{
   readPDF(req.body).then(textData =>{
     res.send(textData)
   })
 });
 
+// Save the files name to be used for saving the file text
 app.post('/save-file-name',(req, res)=>{
-  console.log(req.body.filename)
   filename = req.body.filename
+  // Saved file will be the text not the pdf
   filename = filename.replace(".pdf",".txt")
   res.send(200)
 })

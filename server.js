@@ -78,6 +78,7 @@ async function listS3FileNames() {
 const readPDF = async (file) =>{
   result = []
   try{
+    data = ""
     // Load pdf into PDFDocument
     const pdf = await PDFDocument.load(file);
     // Get the number of pages

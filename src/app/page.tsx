@@ -29,8 +29,12 @@ export default function Home(this: any) {
                   saveLabel.current.hidden = false
                   // Add the files to the file name dropdown
                   const newOption =  { value: filename, label: filename }
-                  const tempfiles = [...fileNames]
-                  tempfiles.push(newOption)
+                  let tempfiles = [...fileNames]
+                  const hasValue = tempfiles.some(file => file.value == newOption.value)
+                  if(!hasValue)
+                  {
+                    tempfiles.push(newOption)
+                  }
                   setFileNames(tempfiles);
                 })
             })

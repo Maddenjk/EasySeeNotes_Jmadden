@@ -2,6 +2,7 @@ const { TextractClient, DetectDocumentTextCommand } = require("@aws-sdk/client-t
 const express = require("express");
 const cors = require('cors');
 const {PDFDocument} = require('pdf-lib'); 
+const { Upload } = require ("@aws-sdk/lib-storage");
 
 const app = express();
 const port = 5000;
@@ -27,13 +28,21 @@ let filename = ""
 
 // Send the file to s3
 const sendFile =async () =>{
-  await s3Client.send(
-    new PutObjectCommand({
-      Bucket: bucketName,
-      Key: filename,
-      Body: data,
-    }),
-  );
+  console.log(data)
+     const upload = new Upload({
+      client: s3Client,
+      params: {
+        Bucket: bucketName,
+        Key: filename,
+        Body: data,
+      },
+    });
+
+    upload.on("httpUploadProgress", (progress) => {
+      console.log(progress);
+    });
+
+    await upload.done();
 }
 
 // Get the file from s3
@@ -124,6 +133,9 @@ const readPage = async (fileImage) =>{
     });
     // Split the inner filtered objects text lines into an array
     const text = filteredObjects.map(obj => obj.Text.split('\n'));
+    data = data.concat(text.join('\n')) 
+    data = data.concat('\n') 
+    console.log(text)
 
     return text
   } catch (error) {

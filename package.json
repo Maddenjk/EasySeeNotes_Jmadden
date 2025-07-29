@@ -2,7 +2,7 @@
   "name": "finalproject_jmadden",
   "version": "0.1.0",
   "private": true,
-  "proxy": "http://172.31.82.235:5000",
+  "proxy": "http://52.70.8.255:5000",
   "scripts": {
     "dev": "next dev",
     "build": "next build",

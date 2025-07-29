@@ -10,10 +10,9 @@ app.use(cors());
 app.use(express.json({limit: '50mb'}));
 // Set it up so we can pass the pdf to the server
 app.use(express.raw({ type: 'application/octet-stream', limit: '50mb' }));
-app.listen(port, () => {
-    console.log(`server running on port ${port}`);
+app.listen(5000, '0.0.0.0', () => {
+  console.log("Listening on port 5000");
 });
-
 const { S3Client, GetObjectCommand, PutObjectCommand, ListObjectsV2Command } = require("@aws-sdk/client-s3");
 
 const s3Client = new S3Client();

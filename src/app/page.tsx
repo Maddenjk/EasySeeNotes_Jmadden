@@ -21,7 +21,7 @@ export default function Home(this: any) {
     // Make sure we have a file and it has text
     if(inputFile.current && text != <></>){
       if(inputFile.current.value != ""){
-            await fetch('52.70.8.255:5000/save-file',{
+            await fetch('http://172.31.82.235/save-file',{
               method:"GET"
             }).then(async(response)=>{
                 await response.text().then((filename)=>{
@@ -47,7 +47,7 @@ export default function Home(this: any) {
     const name = event.target.files[0].name
     const buffer = await event.target.files[0].arrayBuffer()
     // Save the filename for if we want to save the file later
-    await fetch('52.70.8.255:5000/save-file-name',{
+    await fetch('http://172.31.82.235/save-file-name',{
       method:"POST",
       headers:{
         'Content-Type': "application/json"
@@ -55,7 +55,7 @@ export default function Home(this: any) {
       body: JSON.stringify({"filename":name})
     })
     // Convert the pdf into text that can be displayed
-    await fetch('52.70.8.255:5000/convert-pdf-to-text', {
+    await fetch('http://172.31.82.235/convert-pdf-to-text', {
       method:"POST",
       headers:{
         "content-type": "application/octet-stream"
@@ -93,7 +93,7 @@ export default function Home(this: any) {
     // If there is a filename
     if(filename != ""){
       // Get the file from S3
-      const response = await fetch('52.70.8.255:5000/get-saved-text',{
+      const response = await fetch('http://172.31.82.235/get-saved-text',{
       method:"POST",
       headers:{
         "content-type": "application/json"
@@ -141,7 +141,7 @@ function FilenamesListComponent() {
   // Get the list of filenames
   async function getFileNames(){
     const fileList:{ value: string; label: string; }[] = [];
-    fetch('52.70.8.255:5000/get-filenames')
+    fetch('http://172.31.82.235/get-filenames')
     .then(response => response.json())
     .then(data => {
       console.log("Received text from server:", data);

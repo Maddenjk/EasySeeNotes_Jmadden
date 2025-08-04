@@ -18,7 +18,7 @@ const { S3Client, GetObjectCommand, PutObjectCommand, ListObjectsV2Command } = r
 const s3Client = new S3Client();
 
 // The bucket where the files go
-const bucketName = "easyseenotes";
+const bucketName = "easyseenotes2";
 
 // We need to keep the data and file name saved back here for
 // saving the file 
